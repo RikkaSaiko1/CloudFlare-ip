@@ -4,7 +4,7 @@
     "USE_GLOBAL_MODE": true,
     "_comment_USE_GLOBAL_MODE": "true=全局最优15个；false=每个国家最优1个",
 
-    "GLOBAL_TOP_N": 15,
+    "GLOBAL_TOP_N": 20,
     "_comment_GLOBAL_TOP_N": "全局模式下最终保留的节点数量",
 
     "PER_COUNTRY_TOP_N": 1,
@@ -13,7 +13,7 @@
     "BANDWIDTH_CANDIDATES": 150,
     "_comment_BANDWIDTH_CANDIDATES": "进入带宽测速的候选节点数（从TCP通过者中选取前N个）",
 
-    "TCP_PROBES": 1,
+    "TCP_PROBES": 2,
     "_comment_TCP_PROBES": "每个节点测试 TCP 连接的次数",
 
     "MIN_SUCCESS_RATE": 1.0,
@@ -46,10 +46,10 @@
     "PRE_FILTER_PORT_ENABLED": true,
     "_comment_PRE_FILTER_PORT_ENABLED": "是否在 TCP 测试前过滤端口（仅保留下方指定的端口）",
 
-    "PRE_FILTER_PORTS": [443],
+    "PRE_FILTER_PORTS": [443,8443,2053,2083,2087,2096],
     "_comment_PRE_FILTER_PORTS": "TCP 测试前允许的端口列表（可多端口）",
 
-    "ENABLE_WXPUSHER": true,
+    "ENABLE_WXPUSHER": false,
     "_comment_ENABLE_WXPUSHER": "是否启用 WxPusher 微信通知",
 
     "WXPUSHER_APP_TOKEN": "your_app_token_here",
@@ -68,7 +68,7 @@
     "_comment_NOTIFY_CONNECT_TIMEOUT": "微信通知 API 连接超时（秒）",
 
     "_comment_cf_dns": "Cloudflare DNS 批量更新配置",
-    "CF_ENABLED": true,
+    "CF_ENABLED": false,
     "CF_API_TOKEN": "your_CF_API_TOKEN",
     "CF_ZONE_ID": "your_CF_ZONE_ID",
     "CF_DNS_RECORD_NAME": "your_CF_DNS_RECORD_NAME",
@@ -286,7 +286,7 @@
     "_comment_AD_PERLINE_ENABLED": "行尾追加开关",
     "AD_PERLINE_TEXT": " 纯文本",
 
-    "IP_TXT_SHOW_BANDWIDTH": false,
+    "IP_TXT_SHOW_BANDWIDTH": true,
     "_comment_IP_TXT_SHOW_BANDWIDTH": "ip.txt 中是否附带带宽测速信息（如 5.20 Mbps）",
 
     "IP_TXT_SHOW_HTTP_LATENCY": false,
