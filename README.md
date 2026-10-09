@@ -5,10 +5,10 @@
 ---
 
 ### 📥 订阅地址 [ip.txt](https://raw.githubusercontent.com/RikkaSaiko1/CloudFlare-ip/refs/heads/main/ip.txt)
-""
-https://raw.githubusercontent.com/RikkaSaiko1/CloudFlare-ip/refs/heads/main/ip.txt
-""
 
+```
+https://raw.githubusercontent.com/RikkaSaiko1/CloudFlare-ip/refs/heads/main/ip.txt
+```
 
 
 ### 💬 交流反馈
