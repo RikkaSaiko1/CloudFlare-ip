@@ -323,6 +323,12 @@ def load_config():
         "IP_TXT_SHOW_HTTP_LATENCY": False,
         "IP_TXT_SHOW_HTTP_JITTER": False,
         "IP_TXT_SHOW_LATENCY": False,
+        # 是否在 ip.txt 顶部写入本次推送（生成）时间注释行
+        "IP_TXT_HEADER_TIME": False,
+        # 时间注释行的模板，支持 {time} 占位符
+        "IP_TXT_HEADER_TIME_FORMAT": "# 更新时间：{time}",
+        # 时间字符串格式（strftime）
+        "IP_TXT_HEADER_TIME_TZ": "%Y-%m-%d %H:%M:%S",
     }
 
     try:
@@ -445,6 +451,9 @@ IP_TXT_SHOW_BANDWIDTH = cfg["IP_TXT_SHOW_BANDWIDTH"]
 IP_TXT_SHOW_HTTP_LATENCY = cfg["IP_TXT_SHOW_HTTP_LATENCY"]
 IP_TXT_SHOW_HTTP_JITTER = cfg["IP_TXT_SHOW_HTTP_JITTER"]
 IP_TXT_SHOW_LATENCY = cfg["IP_TXT_SHOW_LATENCY"]
+IP_TXT_HEADER_TIME = cfg["IP_TXT_HEADER_TIME"]
+IP_TXT_HEADER_TIME_FORMAT = cfg["IP_TXT_HEADER_TIME_FORMAT"]
+IP_TXT_HEADER_TIME_TZ = cfg["IP_TXT_HEADER_TIME_TZ"]
 
 if FORCE_DIRECT:
     for key in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy", "ALL_PROXY", "all_proxy"):
@@ -1740,6 +1749,14 @@ def write_ip_txt(final_nodes, output_file,
                  speed_map=None, latency_map=None,
                  http_latency_map=None, http_jitter_map=None):
     with open(output_file, "w", encoding="utf-8") as f:
+        # 顶部时间注释行（可选）：形如 "# 更新时间：2026-10-14 00:30:00"
+        if IP_TXT_HEADER_TIME:
+            try:
+                ts = time.strftime(IP_TXT_HEADER_TIME_TZ)
+                line = IP_TXT_HEADER_TIME_FORMAT.replace("{time}", ts)
+            except Exception:
+                line = f"# 更新时间：{time.strftime('%Y-%m-%d %H:%M:%S')}"
+            f.write(line + "\n")
         if header_enabled:
             for line in header_lines:
                 f.write(line + "\n")
