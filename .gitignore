@@ -1,4 +1,9 @@
-﻿config.json
+config.json
 git_sync.ps1
 git_sync.sh
 __pycache__/
+
+# Termux runtime artifacts
+.venv/
+termux/logs/
+.run.lock
