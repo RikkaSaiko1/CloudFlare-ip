@@ -1,6 +1,6 @@
 # Termux 持久化运行指南（Android）
 
-在手机 Termux 里让本项目**长期无人值守运行**：开机自启、整点自动跑、崩溃自动拉起、日志自动轮转。
+在手机 Termux 里让本项目**长期无人值守运行**：开机自启、按系统时间刻度自动跑、崩溃自动拉起、日志自动轮转。
 
 > ⚠️ 本目录下的脚本仅适用于 **Termux (Android)**。Windows / Linux 服务器请直接用手动 `python main.py` 或系统 crontab。
 
@@ -14,7 +14,7 @@ Termux:Boot（开机）
         └─ tmux new-session -d -s cfnb ./run.termux.sh
              └─ run.termux.sh
                   ├─ termux-wake-lock      防止休眠
-                  ├─ sleep 到下一个整点      与「每小时更新」对齐
+                  ├─ sleep 到下一个刻度      按系统时间对齐（默认 1.5 小时）
                   ├─ python main.py        单轮优选（自带 flock 防重入）
                   ├─ tee cron.log / cron-history.log
                   └─ 回到第二步，无限循环
@@ -198,19 +198,32 @@ branch="main"
 
 ## 5. 自定义运行间隔
 
-默认整点运行。改间隔只需在 `run.termux.sh` 里把等待秒数的算法换掉，或用 `supervisor.sh`：
+默认**按系统时间对齐 1.5 小时刻度**运行：以本地时间每天 `00:00` 为原点，
+刻度依次为 `00:00 / 01:30 / 03:00 / 04:30 / 06:00 / 07:30 / 09:00 …`。
+
+例如 `00:37` 启动，会等到 **`01:30`** 才跑第一轮；等待期间无论重启多少次，
+目标刻度不变，**绝不会提前推送**。
+
+改间隔只需设置环境变量（单位：秒）：
 
 ```bash
-# 每 30 分钟跑一轮，崩溃后自动重启（指数退避 1s → 900s）
-CFIP_INTERVAL=1800 bash termux/supervisor.sh &
+# 每整点运行（= 旧行为）
+CFIP_INTERVAL=3600 ./ctl.sh restart
+
+# 每 2 小时运行
+CFIP_INTERVAL=7200 ./ctl.sh restart
 ```
+
+若要永久生效，在 `~/.termux/boot/start-cfnb.sh` 里 `tmux new-session` 之前加上
+`export CFIP_INTERVAL=3600` 即可。
 
 | 环境变量 | 默认值 | 说明 |
 |---|---|---|
-| `CFIP_INTERVAL` | `3600` | 两轮之间的间隔（秒） |
-| `CFIP_START_DELAY` | `0` | 首次启动前等待（秒） |
-| `CFIP_MIN_BACKOFF` | `1` | 崩溃重试最小间隔（秒） |
-| `CFIP_MAX_BACKOFF` | `900` | 崩溃重试最大间隔（秒） |
+| `CFIP_INTERVAL` | `5400` | 刻度间隔（秒），5400 = 1.5 小时 |
+
+> 另有一个独立实现 `termux/supervisor.sh`（固定间隔 + 崩溃指数退避），
+> 与本脚本互不影响，仅在需要「崩溃后自动拉起」语义时使用：
+> `CFIP_INTERVAL=1800 bash termux/supervisor.sh &`
 
 ---
 

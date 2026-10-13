@@ -50,6 +50,10 @@ const DEFAULTS = {
   LOG_FILE: 'run.log',
   ENABLE_WXPUSHER: false,
   ENABLE_CLOUDFLARE_DNS_UPDATE: false,
+  IP_TXT_HEADER_TIME: false,
+  IP_TXT_HEADER_TIME_FORMAT: '# 更新时间：{time}',
+  IP_TXT_HEADER_TIME_TZ: '%Y-%m-%d %H:%M:%S',
+  OUTPUT_FILE: 'ip.txt',
 };
 
 // ========================= 命令行参数 =========================
@@ -124,6 +128,10 @@ function buildSummary(cfg) {
     logging: cfg.ENABLE_LOGGING ? `启用（${cfg.LOG_FILE}）` : '禁用',
     wxpusher: cfg.ENABLE_WXPUSHER ? '启用' : '禁用',
     dnsUpdate: cfg.ENABLE_CLOUDFLARE_DNS_UPDATE ? '启用' : '禁用',
+    outputFile: cfg.OUTPUT_FILE || 'ip.txt',
+    headerTime: cfg.IP_TXT_HEADER_TIME
+      ? `启用（${cfg.IP_TXT_HEADER_TIME_FORMAT.replace('{time}', '<时间>')}）`
+      : '禁用',
   };
 }
 
@@ -165,6 +173,8 @@ function generateMarkdown(cfg, notes) {
   L.push(`| 日志 | ${s.logging} |`);
   L.push(`| WxPusher 通知 | ${s.wxpusher} |`);
   L.push(`| Cloudflare DNS 更新 | ${s.dnsUpdate} |`);
+  L.push(`| 输出文件 | ${s.outputFile} |`);
+  L.push(`| ip.txt 顶部时间行 | ${s.headerTime} |`);
   L.push('');
 
   // ---- 0. 准备 ----
