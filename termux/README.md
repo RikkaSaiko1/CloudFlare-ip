@@ -90,7 +90,7 @@ bash termux/bootstrap-termux.sh
 cd ~/CloudFlare-ip
 ./ctl.sh            # 无参数时打印用法
 
-./ctl.sh start      # 启动守护（幂等）
+./ctl.sh start      # 启动守护
 ./ctl.sh stop       # 停止守护
 ./ctl.sh restart    # 重启守护
 ./ctl.sh status     # 会话 + 进程状态
