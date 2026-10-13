@@ -11,6 +11,12 @@ https://raw.githubusercontent.com/RikkaSaiko1/CloudFlare-ip/refs/heads/main/ip.t
 ```
 
 
+### 📱 想放在手机 / Termux 里长期跑？
+
+见 [termux/README.md](termux/README.md) —— 开机自启、整点自动更新、崩溃自动拉起、日志自动轮转。
+
+---
+
 ### 💬 交流反馈
 
 [📢 频道](https://t.me/Rikkasaiko0)　[👥 群组](https://t.me/rikkasaiko)
