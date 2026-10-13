@@ -1,0 +1,15 @@
+{
+  "name": "cloudflare-ip",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CloudFlare 广东电信优选 IP —— 附带运行命令生成器等辅助脚本",
+  "scripts": {
+    "generate-run-commands": "node scripts/generate-run-commands.js",
+    "run-commands": "node scripts/generate-run-commands.js --stdout",
+    "run-commands:json": "node scripts/generate-run-commands.js --json"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}

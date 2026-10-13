@@ -124,6 +124,78 @@ grep -aE '轮开始|轮结束|已自动推送' cron-history.log | tail
 
 ---
 
+## 4.4 生成运行命令清单（`/generate-run-commands`）
+
+改完 `config.json` 后，想让程序**按当前配置**吐一份可直接复制的命令清单：
+
+```bash
+# 需要 Node.js >= 16（Termux: pkg install nodejs）
+node scripts/generate-run-commands.js            # 写入 RUN-COMMANDS.md
+node scripts/generate-run-commands.js --stdout   # 只打印，不写文件
+node scripts/generate-run-commands.js --json     # 只输出配置摘要
+node scripts/generate-run-commands.js -o my.md   # 指定输出路径
+```
+
+或用 npm（若装了 Node）：
+
+```bash
+npm run generate-run-commands          # 写文件
+npm run run-commands                   # 打印到终端
+npm run run-commands:json              # 摘要 JSON
+```
+
+生成内容包含：当前配置摘要表 + Termux / Linux / Windows 三种平台的可复制命令 + 校验排障命令。
+`config.json` 不存在时会退回内置默认值并给出提示；文件损坏时以退出码 1 报错。
+
+> 纯可选步骤：它只**读**配置生成文档，不改变任何运行状态。
+
+---
+
+## 4.5 从零部署（全新克隆仓库）
+
+`config.json` 与 `git_sync.sh` 已被 `.gitignore` 排除，**全新 clone 下来是没有的**。
+不补上它们，脚本虽然能跑（`main.py` 缺 `config.json` 时会退回内置默认值），但你**自己调过的优选参数会全部丢失**，且 `sync_to_github()` 找不到同步脚本会跳过推送。
+
+先补配置（必需）：
+
+```bash
+cd ~/CloudFlare-ip
+cp /path/to/your/backup/config.json   ./config.json
+cp /path/to/your/backup/git_sync.sh   ./git_sync.sh
+chmod +x git_sync.sh
+```
+
+没有备份时，直接让程序生成一份默认配置，再按需修改：
+
+```bash
+cd ~/CloudFlare-ip
+python main.py          # 首轮会提示「未找到配置文件…将使用内置默认配置运行」
+# 或手动创建
+cat > config.json <<'JSON'
+{}
+JSON
+```
+
+`git_sync.sh` 至少要改 4 处，否则推送必然失败：
+
+```bash
+github_token="你的_PAT"        # 需 repo 写权限
+github_username="你的用户名"
+repo_name="你的仓库名"
+branch="main"
+```
+
+再起守护：
+
+```bash
+./ctl.sh start
+./ctl.sh status
+```
+
+> 已验证：`git_sync.sh` 只执行 `git add ip.txt`，不会把你带 token 的配置文件提交出去。
+
+---
+
 ## 5. 自定义运行间隔
 
 默认整点运行。改间隔只需在 `run.termux.sh` 里把等待秒数的算法换掉，或用 `supervisor.sh`：
